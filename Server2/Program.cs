@@ -39,7 +39,9 @@ foreach (var type in types)
     var queryHandlerType = baseQueryHandlerType.MakeGenericType(type);
     var queryConcreteQueryHandlerType = assembly?.GetTypes().FirstOrDefault(type => type.IsSubclassOf(queryHandlerType));
 
-    var serviceTypeForAdding = typeof(IRequestHandler<,>).MakeGenericType(queryConcreteQueryType, type);
+    var enumType = typeof(IEnumerable<>).MakeGenericType(type);
+
+    var serviceTypeForAdding = typeof(IRequestHandler<,>).MakeGenericType(queryConcreteQueryType, enumType);
 
     builder.Services.AddScoped(serviceTypeForAdding, queryConcreteQueryHandlerType);
 }
