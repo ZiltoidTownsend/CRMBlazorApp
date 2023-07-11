@@ -50,6 +50,9 @@ foreach (var type in types)
 builder.Services.AddTransient(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
 builder.Services.AddTransient(typeof(IRepositoryAsync<,>), typeof(RepositoryAsync<,>)); // to do extentions
 
+builder.Services.AddJwtAuthentication(builder.Services.GetApplicationSettings(builder.Configuration));
+builder.Services.AddApplicationServices();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -60,7 +63,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.Initialize(builder.Configuration);

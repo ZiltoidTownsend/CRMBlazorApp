@@ -7,6 +7,7 @@ public class MainContext : MainAbstructContext
 {
     public MainContext(DbContextOptions<MainContext> options) : base(options)
     {
+        //Database.EnsureDeleted();
         Database.EnsureCreated();
     }
     public DbSet<Contact> Contacts { get; set; }
