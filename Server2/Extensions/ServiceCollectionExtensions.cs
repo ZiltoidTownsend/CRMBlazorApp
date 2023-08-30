@@ -20,6 +20,9 @@ using Microsoft.Extensions.Localization;
 using System.Globalization;
 using Application.Interfaces.Services.Identity;
 using Infrastructure.Services.Identity;
+using Domain.Contracts;
+using Application.Features;
+using MediatR;
 
 namespace Server.Extensions;
 
@@ -46,6 +49,41 @@ internal static class ServiceCollectionExtensions
             })
             .AddEntityFrameworkStores<MainContext>()
             .AddDefaultTokenProviders();
+
+        return services;
+    }
+    internal static IServiceCollection AddComandsAndQueries(this IServiceCollection services)
+    {
+        Type entityBaseType = typeof(AuditableEntity<Guid>); // Базовый тип
+        IEnumerable<Type> entityTypes = Assembly.GetAssembly(entityBaseType)?.GetTypes().Where(type => type.IsSubclassOf(entityBaseType)).ToArray() ?? Array.Empty<Type>();
+
+        Type baseRequestType = typeof(IRequest<>);
+        IEnumerable<Type>? allComandsAndQueries = Assembly.GetAssembly(baseRequestType)?.GetTypes().Where(t => t.IsSubclassOf(baseRequestType)).ToList() ?? new List<Type>();
+
+        foreach(Type type in allComandsAndQueries)
+        {
+            if (Assembly.GetAssembly(type)?.GetTypes().Where(t => t.IsSubclassOf(type)).Count() > 0)
+            {
+                Type baseQueryType = typeof(BaseGetAllQuery<>);
+                Type baseQueryHandlerType = typeof(BaseGetAllQueryHandler<>);
+                var assembly = Assembly.GetAssembly(baseQueryType);
+
+                foreach (var entityType in entityTypes)
+                {
+                    var queryType = baseQueryType.MakeGenericType(entityType);
+                    var queryConcreteQueryType = assembly?.GetTypes().FirstOrDefault(type => type.IsSubclassOf(queryType));
+
+                    var queryHandlerType = baseQueryHandlerType.MakeGenericType(entityType);
+                    var queryConcreteQueryHandlerType = assembly?.GetTypes().FirstOrDefault(type => type.IsSubclassOf(queryHandlerType));
+
+                    var enumType = typeof(IEnumerable<>).MakeGenericType(entityType);
+
+                    var serviceTypeForAdding = typeof(IRequestHandler<,>).MakeGenericType(queryConcreteQueryType, enumType);
+
+                    services.AddScoped(serviceTypeForAdding, queryConcreteQueryHandlerType);
+                }
+            }
+        }     
 
         return services;
     }

@@ -1,0 +1,12 @@
+﻿@typeparam TEntity
+
+<MudSimpleTable>
+    <thead>
+        <tr>
+            @foreach(var header in GetHeaders())
+            {
+                <td>@header</td>
+            }
+        </tr>
+    </thead>
+</MudSimpleTable>

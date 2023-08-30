@@ -1,9 +1,94 @@
 ﻿@page "/"
+@using Services
+@using System.Collections.ObjectModel
 
-<PageTitle>Index</PageTitle>
+@inject IJSRuntime _js;
 
-<h1>Hello, world!</h1>
+@*<MudTable Items="@_items" Breakpoint="Breakpoint.Sm" FixedHeader="true">
+    <HeaderContent>
+        <MudTh>Column1</MudTh>
+        <MudTh>Column2</MudTh>
+        <MudTh>Column3</MudTh>
+        <MudTh>Column4</MudTh>
+        <MudTh>Column5</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Column1">@context.Column1</MudTd>
+        <MudTd DataLabel="Column2">@context.Column2</MudTd>
+        <MudTd DataLabel="Column3">@context.Column3</MudTd>
+        <MudTd DataLabel="Column4">@context.Column4</MudTd>
+        <MudTd DataLabel="Column5">@context.Column5</MudTd>
+    </RowTemplate>
+</MudTable>*@
+@*<MudButton OnClick="@AddItem" Color="@Color.Success" Class="add-item-btn">Add Item</MudButton>*@
+<Client.Pages.Entities.Reestrs.BaseReestr TEntity="TestItem">
 
-Welcome to your new app.
+</Client.Pages.Entities.Reestrs.BaseReestr>
+@*<MudDataGrid Items="@_items">
+    <Columns>
+        <PropertyColumn Property="x => x.Column1" />
+        <PropertyColumn Property="x => x.Column2" />
+        <PropertyColumn Property="x => x.Column3" />
+        <PropertyColumn Property="x => x.Column4" />
+        <PropertyColumn Property="x => x.Column5" />
+    </Columns>
+</MudDataGrid>*@
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code {
+    public class TestItem
+    {
+        public string Column1 { get; set; }
+        public string Column2 { get; set; }
+        public string Column3 { get; set; }
+        public string Column4 { get; set; }
+        public string Column5 { get; set; }
+    }
+
+    private CustomScrollListener CustomScrollListener;
+    private ObservableCollection<TestItem> _items = new ObservableCollection<TestItem>();
+
+    protected override void OnInitialized()
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            _items.Add(new TestItem
+                {
+                    Column1 = $"Value_{i}",
+                    Column2 = $"Value_{i}",
+                    Column3 = $"Value_{i}",
+                    Column4 = $"Value_{i}",
+                    Column5 = $"Value_{i}",
+                });
+        }
+    }
+    void AddItem()
+    {
+        _items.Add(new TestItem
+            {
+                Column1 = $"Value_2",
+                Column2 = $"Value_",
+                Column3 = $"Value_",
+                Column4 = $"Value_",
+                Column5 = $"Value_",
+            });
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+            CustomScrollListener = new CustomScrollListener(null, _js);
+
+            //subscribe to event
+            CustomScrollListener.OnCustomScroll += ScrollListener_OnScroll;
+        }
+    }
+
+    private async void ScrollListener_OnScroll(object? sender, ScrollEventArgs e)
+    {
+        AddItem();
+        StateHasChanged();
+    }
+
+}

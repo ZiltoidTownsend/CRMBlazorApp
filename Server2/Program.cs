@@ -23,30 +23,6 @@ builder.Services.AddControllers();
 
 //builder.Services.AddScoped<IRequestHandler<GetAllContactsQuery, Contact>, GetAllContactsQueryHandler>();
 
-#region to do вынести в отдельное расширение
-Type entityType = typeof(AuditableEntity<Guid>); // Базовый тип
-IEnumerable<Type> types = Assembly.GetAssembly(entityType).GetTypes().Where(type => type.IsSubclassOf(entityType));
-
-Type baseQueryType = typeof(BaseGetAllQuery<>);
-Type baseQueryHandlerType = typeof(BaseGetAllQueryHandler<>);
-var assembly = Assembly.GetAssembly(baseQueryType);
-
-foreach (var type in types)
-{
-    var queryType = baseQueryType.MakeGenericType(type);
-    var queryConcreteQueryType = assembly?.GetTypes().FirstOrDefault(type => type.IsSubclassOf(queryType));
-
-    var queryHandlerType = baseQueryHandlerType.MakeGenericType(type);
-    var queryConcreteQueryHandlerType = assembly?.GetTypes().FirstOrDefault(type => type.IsSubclassOf(queryHandlerType));
-
-    var enumType = typeof(IEnumerable<>).MakeGenericType(type);
-
-    var serviceTypeForAdding = typeof(IRequestHandler<,>).MakeGenericType(queryConcreteQueryType, enumType);
-
-    builder.Services.AddScoped(serviceTypeForAdding, queryConcreteQueryHandlerType);
-}
-#endregion
-
 builder.Services.AddTransient(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
 builder.Services.AddTransient(typeof(IRepositoryAsync<,>), typeof(RepositoryAsync<,>)); // to do extentions
 
