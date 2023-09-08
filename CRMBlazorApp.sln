@@ -28,6 +28,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{D563A0CB-2667-40C9-B019-44D286B6305C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server2\Server.csproj", "{B9775442-2AD9-434C-8571-715D6975DAF7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{07CF1025-BC97-491B-B00B-50D2B5A2C1AF} = {07CF1025-BC97-491B-B00B-50D2B5A2C1AF}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{07CF1025-BC97-491B-B00B-50D2B5A2C1AF}"
 	ProjectSection(ProjectDependencies) = postProject

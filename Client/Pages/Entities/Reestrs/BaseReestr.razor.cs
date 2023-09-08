@@ -1,33 +1,51 @@
-﻿using Client.ViewModels.Tables;
+﻿using Client.Managers;
+using Client.ViewModels.Tables;
+using Domain.Contracts;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using System.Collections.ObjectModel;
 
 namespace Client.Pages.Entities.Reestrs;
-partial class BaseReestr<TEntity>
+partial class BaseReestr<TEntity> where TEntity : AuditableEntity<Guid>
 {
+    [Inject]
+    private ProfileManager? _profileManager { get; set; }
     public TableViewModel? TableViewModel { get; set; }
     public List<TEntity> Items = new List<TEntity>();
-    [Parameter]
-    public RenderFragment HeaderEntity { get; set; }
-    private List<string> GetHeaders()
+    public string? ReestrTableKey { get; set; }
+    protected override async Task OnInitializedAsync()
     {
-        var headers = new List<string>();
+        await base.OnInitializedAsync();
+
+        ReestrTableKey = $"Table";
+
+        //Items = await manager.GetAllEntitiesAsync();
+
+        CreateTableViewModel();
+    }
+    private void CreateTableViewModel()
+    {
+        TableViewModel = new TableViewModel();
+        TableViewModel.Headers = _profileManager.GetProfileDataByKey("asd");
+        TableViewModel.Rows = new List<TableRowViewModel>();
+
+        foreach (var item in Items)
+        {
+            TableViewModel.Rows.Add(CreateRow(item));
+        }
+    }
+    private TableRowViewModel CreateRow(TEntity item)
+    {
+        var row = new TableRowViewModel();
+        row.RowItems = new List<TableItemViewModel>();
         var entityType = typeof(TEntity);
 
-        var properties = entityType.GetProperties();
-
-        foreach (var prop in properties)
+        foreach(var tableItem in TableViewModel.Headers)
         {
-            headers.Add(prop.Name);
+            var property = entityType.GetProperty(tableItem.Value);
+
+            row.RowItems.Add(new TableItemViewModel { IsLink = false, Value = property.GetValue(item).ToString() });
         }
 
-        return headers;
-    }
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
 
-        TableViewModel = new TableViewModel();
+        return row;
     }
 }

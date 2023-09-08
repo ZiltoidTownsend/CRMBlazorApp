@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Services;
+﻿using Application.Configuration;
+using Application.Interfaces.Services;
 
 namespace Server.Extensions;
 
@@ -16,5 +17,22 @@ internal static class ApplicationBuilderExtensions
         }
 
         return app;
+    }
+
+    internal static IApplicationBuilder UseForwarding(this IApplicationBuilder app, IConfiguration configuration)
+    {
+        AppConfiguration config = GetApplicationSettings(configuration);
+        if (config.BehindSSLProxy)
+        {
+            app.UseCors();
+            app.UseForwardedHeaders();
+        }
+
+        return app;
+    }
+    private static AppConfiguration GetApplicationSettings(IConfiguration configuration)
+    {
+        var applicationSettingsConfiguration = configuration.GetSection(nameof(AppConfiguration));
+        return applicationSettingsConfiguration.Get<AppConfiguration>();
     }
 }

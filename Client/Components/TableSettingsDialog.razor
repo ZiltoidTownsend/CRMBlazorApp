@@ -1,0 +1,14 @@
+﻿<MudGrid Class="p-4">
+    <MudItem xs="12">
+        <MudPaper Outlined="true" Class="d-flex align-center justify-center mud-width-full p-4">
+            <MudGrid Spacing="1">
+                @foreach (var header in _tableViewModel?.Headers)
+                {
+                    <MudItem xs="1">
+                        <MudPaper Square="true" Outlined="true" Class="d-flex align-center justify-center mud-width-full">@header</MudPaper>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+</MudGrid>

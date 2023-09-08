@@ -1,12 +1,9 @@
-﻿@typeparam TEntity
+﻿@using Managers
+@using Domain.Contracts
+@using Client.Components
 
-<MudSimpleTable>
-    <thead>
-        <tr>
-            @foreach(var header in GetHeaders())
-            {
-                <td>@header</td>
-            }
-        </tr>
-    </thead>
-</MudSimpleTable>
+@typeparam TEntity where TEntity : AuditableEntity<Guid>
+
+@inject BaseManager<TEntity> manager
+
+<CRMTable TableRows= TableKey="@ReestrTableKey"/>

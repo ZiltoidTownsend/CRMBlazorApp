@@ -1,0 +1,35 @@
+﻿<MudPaper Elevation="25">
+    <MudToolBar>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit" OnClick="RedirectToSettingPage" />
+    </MudToolBar>
+</MudPaper>
+<MudSimpleTable Bordered="true" Class="overflow-hidden p-4">
+    <thead>
+        <tr>
+            <MudGrid Spacing="0">
+                @if (TableViewModel != null && TableViewModel.Headers.Count > 0)
+                    foreach (var header in TableViewModel.Headers)
+                    {
+                        <MudItem xs="header.Position">
+                            <MudPaper Square="true" Outlined="true" Class="p-2">
+                                <td>@header.DisplayValue</td>
+                            </MudPaper>
+                        </MudItem>
+                    }
+            </MudGrid>
+        </tr>
+    </thead>
+    <tbody>
+       @*  @if (_headers != null && TableViewModel.Rows.Count > 0)
+            foreach (var row in TableViewModel.Rows)
+            {
+                <tr>
+                    @foreach (var rowItem in row.RowItems)
+                    {
+                        <td>@rowItem.Value</td>
+                    }
+                </tr>
+            } *@
+    </tbody>
+</MudSimpleTable>

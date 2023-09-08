@@ -1,4 +1,6 @@
 using Client;
+using Client.Managers;
+using Domain.Entities;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
@@ -8,6 +10,9 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddTransient<BaseManager<Contact>, ContactManager>();
+builder.Services.AddScoped<PageHistoryNavigationManager>();
+builder.Services.AddScoped<ProfileManager>();
 
 builder.Services.AddMudServices();
 

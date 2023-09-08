@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Services
 @using System.Collections.ObjectModel
+@using Domain.Entities
 
 @inject IJSRuntime _js;
 
@@ -21,10 +22,8 @@
     </RowTemplate>
 </MudTable>*@
 @*<MudButton OnClick="@AddItem" Color="@Color.Success" Class="add-item-btn">Add Item</MudButton>*@
-<Client.Pages.Entities.Reestrs.BaseReestr TEntity="TestItem">
-
-</Client.Pages.Entities.Reestrs.BaseReestr>
-@*<MudDataGrid Items="@_items">
+<Client.Pages.Entities.Reestrs.BaseReestr TEntity="Contact"/>
+@* <MudDataGrid Items="@_items">
     <Columns>
         <PropertyColumn Property="x => x.Column1" />
         <PropertyColumn Property="x => x.Column2" />
@@ -32,7 +31,7 @@
         <PropertyColumn Property="x => x.Column4" />
         <PropertyColumn Property="x => x.Column5" />
     </Columns>
-</MudDataGrid>*@
+</MudDataGrid> *@
 
 @code {
     public class TestItem

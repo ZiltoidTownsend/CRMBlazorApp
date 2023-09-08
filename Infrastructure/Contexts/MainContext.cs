@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Infrastructure.Models.Profile;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Contexts;
@@ -11,6 +12,7 @@ public class MainContext : MainAbstructContext
         Database.EnsureCreated();
     }
     public DbSet<Contact> Contacts { get; set; }
+    public DbSet<Profile> Profiles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

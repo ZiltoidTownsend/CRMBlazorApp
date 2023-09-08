@@ -13,7 +13,7 @@ public abstract class BaseManager<TEntity> where TEntity : AuditableEntity<Guid>
         HttpClient = httpClient;
     }
 
-    public async Task<List<TEntity>> GetAllEntitiesAsync()
+    public virtual async Task<List<TEntity>> GetAllEntitiesAsync()
     {
         var response = await HttpClient.GetAsync(EntityPath);
         var responseAsString = await response.Content.ReadAsStringAsync();

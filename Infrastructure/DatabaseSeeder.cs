@@ -3,6 +3,7 @@ using BlazorHero.Shared.Constants.Permission;
 using CRMBlazorApp.Shared.Constants;
 using CRMBlazorApp.Shared.Constants.Roles;
 using CRMBlazorApp.Shared.Constants.User;
+using Domain.Entities;
 using Infrastructure.Contexts;
 using Infrastructure.Helpers;
 using Infrastructure.Models.Identity;
@@ -33,9 +34,27 @@ public class DatabaseSeeder : IDatabaseSeeder
     public void Initialize()
     {
         AddAdministrator();
+        AddContacts();
+
         _db.SaveChanges();
     }
+    private void AddContacts()
+    {
+        var contact = new Contact
+        {
+            Id = Guid.NewGuid(),
+            FirstName = "Test",
+            LastName = "Testng",
+            CreatedBy = "asd",
+            LastModifiedBy = "asd",
+            CreatedOn = DateTime.UtcNow,
+            LastModifiedOn = DateTime.UtcNow,
+            FullName = "Test",
+            Patronymic = "Test",
+        };
 
+        _db.Contacts.Add(contact);
+    }
     private void AddBasicUser()
     {
         Task.Run(async () =>
@@ -102,6 +121,7 @@ public class DatabaseSeeder : IDatabaseSeeder
                     }
                 }
             }
+
             foreach (var permission in Permissions.GetRegisteredPermissions())
             {
                 await _roleManager.AddPermissionClaim(adminRoleInDb, permission);

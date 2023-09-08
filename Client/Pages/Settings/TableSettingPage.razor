@@ -1,0 +1,79 @@
+﻿@using Client.Components.DropZone
+@page "/TableSettingPage/{key}"
+
+<h3>@Key</h3>
+<MudGrid>
+    @for (int i = 0; i < papers; i++)
+    {
+        int localindex = i;
+
+        <MudItem xs="@breaks[localindex]">
+            <MudPaper Class="d-flex flex-row align-center justify-center mud-width-full p-2">
+                <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowUp" OnClick="(()=>UpdateBreaks(localindex,1))" Size="Size.Small" />
+                <MudText Typo="Typo.h6" Align="Align.Center">@breaks[localindex]</MudText>
+                <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowDown" OnClick="(()=>UpdateBreaks(localindex,-1))" Size="Size.Small" />
+            </MudPaper>
+        </MudItem>
+    }
+</MudGrid>
+
+@* <MudDropContainer T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Selector == dropzone)" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
+    <ChildContent>
+        <MudGrid Class="p-4">
+            <MudItem xs="12">
+            <MudPaper Class="d-flex align-center justify-center mud-width-full p-4">
+                    <MudGrid Spacing="1">
+                    <MudDropZone T="DropItem" Identifier="1" Class="d-flex flex-row flex-grow-1 justify-start" AllowReorder="true" />
+                    </MudGrid>
+            </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </ChildContent>
+    <ItemRenderer>
+        <MudItem xs="4">
+            <MudPaper Square="true" Outlined="true" Class="align-center justify-center mud-width-full">
+                @context.Name
+            </MudPaper>
+        </MudItem>
+    </ItemRenderer>
+</MudDropContainer> *@
+
+@code {
+    int _papers = 7;
+    int papers { get { return _papers; } set { UpdatePapers(value); } }
+
+    int[] breaks = new int[7] { 1, 1, 1, 1, 1, 1, 1 };
+
+    void UpdatePapers(int value)
+    {
+
+        int[] newbreaks = Enumerable.Repeat(3, value).ToArray();
+
+        for (int i = 0; i < newbreaks.Length; i++)
+        {
+            if (i < breaks.Length)
+            {
+                newbreaks[i] = breaks[i];
+            }
+        }
+
+        breaks = newbreaks;
+
+        _papers = value;
+
+        StateHasChanged();
+    }
+
+    void UpdateBreaks(int index, int changeamount)
+    {
+        List<int> newbreaks = breaks.ToList();
+        if (newbreaks[index] + changeamount > 12 || newbreaks[index] + changeamount < 1) return; //don't go above 12 or below 1
+        newbreaks[index] += changeamount;
+
+        breaks = newbreaks.ToArray();
+
+        StateHasChanged();
+    }
+}
+
+
