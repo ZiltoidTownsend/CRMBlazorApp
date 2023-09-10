@@ -1,35 +1,52 @@
-﻿<MudPaper Elevation="25">
+﻿@using ViewModels.Tables
+
+<MudPaper Elevation="25">
     <MudToolBar>
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit" OnClick="RedirectToSettingPage" />
+        <MudIconButton Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit" OnClick="RedirectToSettingPage"/>
     </MudToolBar>
 </MudPaper>
-<MudSimpleTable Bordered="true" Class="overflow-hidden p-4">
+
+<MudTable T="TableRowViewModel" Items="@TableViewModel.Rows" RowClass="d-flex" CustomHeader="true">
+    <HeaderContent>
+        <MudTHeadRow Class="d-flex">
+            @foreach (var header in TableViewModel.Headers)
+            {
+                <MudTh Class=@($"mud-grid-item-xs-{header.Position}")>@header.DisplayValue</MudTh>
+            }
+        </MudTHeadRow>
+
+    </HeaderContent>
+    <RowTemplate>
+        @foreach(var row in context.RowItems)
+        {
+            <MudTh Class="mud-grid-item-xs-1">@row.Value</MudTh>
+        }
+    </RowTemplate>
+</MudTable>
+
+@*<MudSimpleTable Bordered="true" Class="overflow-hidden p-4">
     <thead>
-        <tr>
-            <MudGrid Spacing="0">
-                @if (TableViewModel != null && TableViewModel.Headers.Count > 0)
-                    foreach (var header in TableViewModel.Headers)
-                    {
-                        <MudItem xs="header.Position">
-                            <MudPaper Square="true" Outlined="true" Class="p-2">
-                                <td>@header.DisplayValue</td>
-                            </MudPaper>
-                        </MudItem>
-                    }
-            </MudGrid>
+        <tr class="d-flex flex-row">
+            @if (TableViewModel != null && TableViewModel.Headers.Count > 0)
+                foreach (var header in TableViewModel.Headers)
+                {
+                    <td class="mud-grid-item-xs-@header.Position">@header.DisplayValue</td>
+                }
         </tr>
     </thead>
-    <tbody>
-       @*  @if (_headers != null && TableViewModel.Rows.Count > 0)
-            foreach (var row in TableViewModel.Rows)
+    <tbody class="d-flex flex-column">
+            @if (TableViewModel != null && TableViewModel.Rows.Count > 0)
             {
-                <tr>
-                    @foreach (var rowItem in row.RowItems)
-                    {
-                        <td>@rowItem.Value</td>
-                    }
-                </tr>
-            } *@
+                @foreach (var row in TableViewModel.Rows)
+                {
+                    <tr class="d-flex flex-row">
+                        @foreach (var rowItem in row.RowItems)
+                        {
+                            <td class="mud-grid-item-xs-1">@rowItem.Value</td>
+                        }
+                    </tr>
+                }
+            }
     </tbody>
-</MudSimpleTable>
+</MudSimpleTable>*@

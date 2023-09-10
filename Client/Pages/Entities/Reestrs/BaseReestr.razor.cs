@@ -17,21 +17,46 @@ partial class BaseReestr<TEntity> where TEntity : AuditableEntity<Guid>
 
         ReestrTableKey = $"Table";
 
-        //Items = await manager.GetAllEntitiesAsync();
+        Items = await manager.GetAllEntitiesAsync();
 
         CreateTableViewModel();
     }
     private void CreateTableViewModel()
     {
         TableViewModel = new TableViewModel();
-        TableViewModel.Headers = _profileManager.GetProfileDataByKey("asd");
+        
         TableViewModel.Rows = new List<TableRowViewModel>();
+
+        TableViewModel.Headers = GetTableHeaderData();
 
         foreach (var item in Items)
         {
             TableViewModel.Rows.Add(CreateRow(item));
         }
     }
+    private List<TableHeaderItemData> GetTableHeaderData()
+    {
+        var dataFromProfile = _profileManager.GetProfileDataByKey("asd");
+
+        return dataFromProfile.Count == 0 ? _defaultHeaderData : dataFromProfile;      
+    }
+    private List<TableHeaderItemData> _defaultHeaderData => new List<TableHeaderItemData>
+    {
+        new TableHeaderItemData
+        {
+            Value = "FirstName",
+            DisplayValue = "Имя",
+            Position = 1,
+            Weight = 1,
+        },
+        new TableHeaderItemData
+        {
+            Value = "LastName",
+            DisplayValue = "Фамилия",
+            Position = 2,
+            Weight = 1,
+        },
+    };
     private TableRowViewModel CreateRow(TEntity item)
     {
         var row = new TableRowViewModel();

@@ -10,15 +10,17 @@ public partial class TableSettingPage
     public string? Key { get; set; }
     [Inject]
     private PageHistoryNavigationManager _navigationManager { get; set; }
+    [Inject]
+    private ProfileManager _profileManager { get; set; }
 
-    private TableViewModel? _tableViewModel;
+    private List<TableHeaderItemData>? _headersData;
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        _tableViewModel = new TableViewModel();
+        _headersData = _profileManager.GetProfileDataByKey(Key);
 
-        _tableViewModel.Headers = new List<string> { "Test", "Test2", "test3" };
+        /*_tableViewModel.Headers = new List<string> { "Test", "Test2", "test3" };*/
 
     }
     private void NavigateToBack()

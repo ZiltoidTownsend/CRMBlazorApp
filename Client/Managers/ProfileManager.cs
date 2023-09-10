@@ -2,26 +2,26 @@
 
 public class ProfileManager
 {
-    public List<TableHeaderItemData> GetProfileDataByKey(string key)
+    public List<TableHeaderItemData> GetProfileDataByKey(string key) => new List<TableHeaderItemData>
     {
-        return new List<TableHeaderItemData> 
+        new TableHeaderItemData
         {
-            new TableHeaderItemData
-            {
-                DisplayValue = "Имя",
-                Weight = 1,
-                Position = 1
-            },
-            new TableHeaderItemData
-            {
-                DisplayValue = "Фамилия",
-                Weight = 3,
-                Position = 2
-            },
-        };
-    }
-}
+            Value = "FirstName",
+            DisplayValue = "Имя",
+            Position = 1,
+            Weight = 1,
+        },
+        new TableHeaderItemData
+        {
+            Value = "LastName",
+            DisplayValue = "Фамилия",
+            Position = 2,
+            Weight = 1,
+        },
+    };
 
+    private List<TableHeaderItemData> _tableData = new List<TableHeaderItemData>();
+}
 public class TableHeaderItemData
 {
     public string DisplayValue { get; set; }

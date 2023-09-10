@@ -15,7 +15,7 @@ public partial class TableSettingsDialog
 
         _tableViewModel = new TableViewModel();
 
-        _tableViewModel.Headers = new List<string> { "Test", "Test2", "test3" };
+        /*_tableViewModel.Headers = new List<string> { "Test", "Test2", "test3" };*/
 
     }
 }
