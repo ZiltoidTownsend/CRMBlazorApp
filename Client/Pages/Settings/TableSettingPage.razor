@@ -1,60 +1,63 @@
-﻿@using Client.Components.DropZone
+﻿@using Client.Components.DropZone;
+@using Client.Managers
 @page "/TableSettingPage/{key}"
 
 <h3>@Key</h3>
-<MudSimpleTable Bordered="true" Class="overflow-hidden p-4">
+@* <MudSimpleTable Bordered="true" Class="overflow-hidden p-4">
     <thead class="d-flex flex-column">
         <tr class="d-flex">
-            @foreach (var item in _headersData)
+            @for (int i = 0; i < _headersData.Count(); i++)
             {
-                <td class="mud-grid-item-xs-@item.Position">
+                int index = i;
+                <td class=@($"{GetClassForItemContainer(index)}") onmouseover=@(() => OnFocusHandler(index, true)) onmouseleave=@(() => OnFocusHandler(index, false))>
                     <div class="d-flex">
-                        <MudIconButton Size="Size.Small" Style="width: 36px; height: 36px" Class="align-self-start" Icon="@Icons.Material.Filled.Add" />
-                        <MudText Align="@Align.Center" Class="align-self-lg-stretch flex-grow-1">@item.DisplayValue</MudText>
-                        <MudIconButton Style="width: 36px; height: 36px" Class="align-self-end" Size="@Size.Small" Icon="@Icons.Material.Filled.Remove" />
+                        <MudIconButton Size="Size.Small" Style="width: 36px; height: 36px" Class=@GetClassForItem(index) Icon="@Icons.Material.Filled.Add" />
+                        <MudText Align="@Align.Center" Class="align-self-lg-stretch flex-grow-1">@_headersData[index].DisplayValue</MudText>
+                        <MudIconButton Style="width: 36px; height: 36px" Class=@GetClassForItem(index) Size="@Size.Small" Icon="@Icons.Material.Filled.Remove" />
                     </div>
                 </td>
             }
         </tr>
     </thead>
-</MudSimpleTable>
+</MudSimpleTable> *@
+@if (_items != null)
+{
+    <MudDropContainer T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Position == dropzone)" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
+        <ChildContent>
+            <div class="d-flex flex-grow-1">
+                @for (int i = 0; i < 12; i++)
+                {
+                    int index = i;
+                    <MudDropZone T="DropItem" 
+                        Identifier="@i.ToString()"
+                                 Class="border mud-grid-item-xs-1"                              
+                                 >
+                        <MudPaper Square="true">
+                        </MudPaper>
+                        @* Class=@GetClassForDropZoneItem(i)> *@
+                    </MudDropZone>
+                }
+            </div>
+        </ChildContent>
+        <ItemRenderer>
+            <MudPaper Elevation="25"               
+                      onmouseover=@(() => OnFocusHandler(int.Parse(context.Position), true))
+                      onmouseleave=@(() => OnFocusHandler(int.Parse(context.Position), false))
+                Class=@GetClassForItemContainer(int.Parse(context.Position))>
+                <MudIconButton Size="Size.Small" Style="width: 36px; height: 36px" Class=@GetClassForItem(int.Parse(context.Position)) Icon="@Icons.Material.Filled.Add" />
+                <MudText Align="@Align.Center" Class="align-self-lg-stretch flex-grow-1">@_items[int.Parse(context.Position) - 1].DisplayValue</MudText>
+                <MudIconButton Style="width: 36px; height: 36px" Class=@GetClassForItem(int.Parse(context.Position)) Size="@Size.Small" Icon="@Icons.Material.Filled.Remove" />
+            </MudPaper>
+        </ItemRenderer>
+    </MudDropContainer>
+}
 
 @code {
-    int _papers = 7;
-    int papers { get { return _papers; } set { UpdatePapers(value); } }
-
-    int[] breaks = new int[7] { 1, 1, 1, 1, 1, 1, 1 };
-
-    void UpdatePapers(int value)
+    private void ItemUpdated(MudItemDropInfo<DropItem> dropItem)
     {
-
-        int[] newbreaks = Enumerable.Repeat(3, value).ToArray();
-
-        for (int i = 0; i < newbreaks.Length; i++)
-        {
-            if (i < breaks.Length)
-            {
-                newbreaks[i] = breaks[i];
-            }
-        }
-
-        breaks = newbreaks;
-
-        _papers = value;
-
-        StateHasChanged();
+        dropItem.Item.Position = dropItem.DropzoneIdentifier;
     }
 
-    void UpdateBreaks(int index, int changeamount)
-    {
-        List<int> newbreaks = breaks.ToList();
-        if (newbreaks[index] + changeamount > 12 || newbreaks[index] + changeamount < 1) return; //don't go above 12 or below 1
-        newbreaks[index] += changeamount;
-
-        breaks = newbreaks.ToArray();
-
-        StateHasChanged();
-    }
 }
 
 

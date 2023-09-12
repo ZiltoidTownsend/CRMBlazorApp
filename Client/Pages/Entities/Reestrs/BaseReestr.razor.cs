@@ -46,14 +46,14 @@ partial class BaseReestr<TEntity> where TEntity : AuditableEntity<Guid>
         {
             Value = "FirstName",
             DisplayValue = "Имя",
-            Position = 1,
+            Position = "1",
             Weight = 1,
         },
         new TableHeaderItemData
         {
             Value = "LastName",
             DisplayValue = "Фамилия",
-            Position = 2,
+            Position = "2",
             Weight = 1,
         },
     };

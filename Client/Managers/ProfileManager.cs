@@ -8,14 +8,14 @@ public class ProfileManager
         {
             Value = "FirstName",
             DisplayValue = "Имя",
-            Position = 1,
+            Position = "1",
             Weight = 1,
         },
         new TableHeaderItemData
         {
             Value = "LastName",
             DisplayValue = "Фамилия",
-            Position = 2,
+            Position = "2",
             Weight = 1,
         },
     };
@@ -24,8 +24,10 @@ public class ProfileManager
 }
 public class TableHeaderItemData
 {
-    public string DisplayValue { get; set; }
-    public string Value { get; set; }
+    public string? DisplayValue { get; set; }
+    public string? Value { get; set; }
     public int Weight { get; set; }
-    public int Position { get; set; }
+    public string? Position { get; set; }
+    public bool IsSelected { get; set; }
 }
+
