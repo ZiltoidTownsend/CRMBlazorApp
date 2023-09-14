@@ -11,22 +11,24 @@ public partial class TableSettingPage
     [Parameter]
     public string? Key { get; set; }
     [Inject]
-    private PageHistoryNavigationManager _navigationManager { get; set; }
+    private PageHistoryNavigationManager? _navigationManager { get; set; }
     [Inject]
-    private ProfileManager _profileManager { get; set; }
-    private DropItem[] _items;
-    private TableHeaderItemData[] _headersData;
+    private ProfileManager? _profileManager { get; set; }
+    private DropItem[]? _items;
+    private TableHeaderItemData[]? _headersData;
+    private int _columnCount = 12;
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        _headersData = _profileManager.GetProfileDataByKey(Key).ToArray();
+        _headersData = _profileManager?.GetProfileDataByKey(Key).ToArray();
 
-        _items = new DropItem[_headersData.Length];
+        _items = new DropItem[_headersData!.Length];
 
         for(int i = 0; i < _headersData.Count(); i++)
         {
-            _items[i] = new DropItem() { DisplayValue = _headersData[i].DisplayValue, Position = _headersData[i].Position };
+            _columnCount = (_columnCount - _headersData[i].Weight) + 1;
+            _items[i] = new DropItem() { DisplayValue = _headersData[i].DisplayValue, Position = _headersData[i].Position, Weight = _headersData[i].Weight };
         }
 
         StateHasChanged();
@@ -39,16 +41,16 @@ public partial class TableSettingPage
         _navigationManager.NavigateBack();
     }
 
-    void OnFocusHandler(int index, bool isSelect)
+    void OnFocusHandler(string index, bool isSelect)
     {
-/*        _items[index - 1].IsSelected = isSelect;
-        StateHasChanged();    */    
+        _items.First(i => i.Position == index).IsSelected = isSelect;
+        StateHasChanged();
     }
-    string GetClassForItem(int index) => "";
-/*        new CssBuilder()
-        .AddClass("visible", _items[index - 1].IsSelected)
-        .AddClass("invisible", !_items[index - 1].IsSelected)
-        .Build();*/
+    string GetClassForItem(string index) =>
+        new CssBuilder()
+        .AddClass("visible", _items.First(i => i.Position == index).IsSelected)
+        .AddClass("invisible", !_items.First(i => i.Position == index).IsSelected)
+        .Build();
     string GetClassForItemContainer(int index)
     {
         var css = new CssBuilder()
@@ -63,9 +65,26 @@ public partial class TableSettingPage
 
     string GetClassForDropZoneItem(int index)
     {
-        var cssClass = _headersData.Count() > index? $"mud-grid-item-xs-{_headersData[index].Position}" : "mud-grid-item-xs-1";
+        var item = _items.FirstOrDefault(i => i.Position == index.ToString());
+        var cssClass = item != null ? $"mud-grid-item-xs-{item.Weight}" : "mud-grid-item-xs-1";
 
-        return new CssBuilder(cssClass).Build();
+        return new CssBuilder(cssClass)
+            .AddClass("border")
+            .Build();
+    }
+    private void OnClickHandler(string index, int value)
+    {
+        _items.FirstOrDefault(i => i.Position == index)!.Weight += value;
+        _columnCount -= value;
+
+        var item = _items.FirstOrDefault(i => i.Position == (_columnCount).ToString());
+
+        if (item != null)
+        {
+            item.Position = (_columnCount - value).ToString();
+        }
+
+        StateHasChanged();
     }
 }
 public class DropItem

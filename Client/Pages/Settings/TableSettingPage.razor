@@ -24,14 +24,13 @@
 {
     <MudDropContainer T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Position == dropzone)" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
         <ChildContent>
-            <div class="d-flex flex-grow-1">
-                @for (int i = 0; i < 12; i++)
+            <div class="d-flex flex-grow-1 mud-grid">
+                @for (int i = 0; i < _columnCount; i++)
                 {
                     int index = i;
                     <MudDropZone T="DropItem" 
                         Identifier="@i.ToString()"
-                                 Class="border mud-grid-item-xs-1"                              
-                                 >
+                                 Class=@GetClassForDropZoneItem(index)>
                         <MudPaper Square="true">
                         </MudPaper>
                         @* Class=@GetClassForDropZoneItem(i)> *@
@@ -41,12 +40,12 @@
         </ChildContent>
         <ItemRenderer>
             <MudPaper Elevation="25"               
-                      onmouseover=@(() => OnFocusHandler(int.Parse(context.Position), true))
-                      onmouseleave=@(() => OnFocusHandler(int.Parse(context.Position), false))
-                Class=@GetClassForItemContainer(int.Parse(context.Position))>
-                <MudIconButton Size="Size.Small" Style="width: 36px; height: 36px" Class=@GetClassForItem(int.Parse(context.Position)) Icon="@Icons.Material.Filled.Add" />
-                <MudText Align="@Align.Center" Class="align-self-lg-stretch flex-grow-1">@_items[int.Parse(context.Position) - 1].DisplayValue</MudText>
-                <MudIconButton Style="width: 36px; height: 36px" Class=@GetClassForItem(int.Parse(context.Position)) Size="@Size.Small" Icon="@Icons.Material.Filled.Remove" />
+                      onmouseover=@(() => OnFocusHandler(context!.Position, true))
+                      onmouseleave=@(() => OnFocusHandler(context!.Position, false))
+                Class=@GetClassForItemContainer(int.Parse(context!.Position))>
+                <MudIconButton Size="Size.Small" Style="width: 36px; height: 36px" Class=@GetClassForItem(context.Position) OnClick="@(()=>OnClickHandler(context.Position, 1))" Icon="@Icons.Material.Filled.Add" />
+                <MudText Align="@Align.Center" Class="align-self-lg-stretch flex-grow-1">@_items.First(i => i.Position == context.Position).DisplayValue</MudText>
+                <MudIconButton Style="width: 36px; height: 36px" Class=@GetClassForItem(context.Position) OnClick="(() => OnClickHandler(context.Position, -1)) " Size="@Size.Small" Icon="@Icons.Material.Filled.Remove"  />
             </MudPaper>
         </ItemRenderer>
     </MudDropContainer>

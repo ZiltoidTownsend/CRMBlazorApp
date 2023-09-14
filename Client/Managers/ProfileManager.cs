@@ -8,15 +8,15 @@ public class ProfileManager
         {
             Value = "FirstName",
             DisplayValue = "Имя",
-            Position = "1",
+            Position = "0",
             Weight = 1,
         },
         new TableHeaderItemData
         {
             Value = "LastName",
             DisplayValue = "Фамилия",
-            Position = "2",
-            Weight = 1,
+            Position = "1",
+            Weight = 2,
         },
     };
 
