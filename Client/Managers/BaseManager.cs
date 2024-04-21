@@ -13,9 +13,9 @@ public abstract class BaseManager<TEntity> where TEntity : AuditableEntity<Guid>
         HttpClient = httpClient;
     }
 
-    public virtual async Task<List<TEntity>> GetAllEntitiesAsync()
+    public virtual async Task<List<TEntity>> GetAllEntitiesAsync(int skipCount, int getCount, string sortingString)
     {
-        var response = await HttpClient.GetAsync(EntityPath);
+        var response = await HttpClient.GetAsync($"api/{EntityPath}?skipCount={skipCount}&getCount={getCount}&sortingString={sortingString}");
         var responseAsString = await response.Content.ReadAsStringAsync();
         var responseEntities = JsonSerializer.Deserialize<List<TEntity>>(responseAsString, new JsonSerializerOptions
         {

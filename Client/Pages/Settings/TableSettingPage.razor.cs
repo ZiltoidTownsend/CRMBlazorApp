@@ -14,21 +14,19 @@ public partial class TableSettingPage
     private PageHistoryNavigationManager? _navigationManager { get; set; }
     [Inject]
     private ProfileManager? _profileManager { get; set; }
-    private DropItem[]? _items;
+    private List<DropItem>? _items;
     private TableHeaderItemData[]? _headersData;
-    private int _columnCount = 12;
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
         _headersData = _profileManager?.GetProfileDataByKey(Key).ToArray();
 
-        _items = new DropItem[_headersData!.Length];
+        _items = new List<DropItem>();
 
         for(int i = 0; i < _headersData.Count(); i++)
         {
-            _columnCount = (_columnCount - _headersData[i].Weight) + 1;
-            _items[i] = new DropItem() { DisplayValue = _headersData[i].DisplayValue, Position = _headersData[i].Position, Weight = _headersData[i].Weight };
+            _items.Add(new DropItem() { DisplayValue = _headersData[i].DisplayValue, Position = _headersData[i].Position, Weight = _headersData[i].Weight });
         }
 
         StateHasChanged();
@@ -74,14 +72,14 @@ public partial class TableSettingPage
     }
     private void OnClickHandler(string index, int value)
     {
-        _items.FirstOrDefault(i => i.Position == index)!.Weight += value;
-        _columnCount -= value;
+        var sumWeight = _items.Sum(i => i.Weight);
 
-        var item = _items.FirstOrDefault(i => i.Position == (_columnCount).ToString());
+        var intIndex = int.Parse(index);
 
-        if (item != null)
+        if (sumWeight + value <= 12 && _items[intIndex].Weight + value != 0)
         {
-            item.Position = (_columnCount - value).ToString();
+
+            _items.FirstOrDefault(i => i.Position == index)!.Weight += value;
         }
 
         StateHasChanged();

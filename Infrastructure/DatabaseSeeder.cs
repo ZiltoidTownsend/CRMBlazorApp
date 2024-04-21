@@ -40,20 +40,24 @@ public class DatabaseSeeder : IDatabaseSeeder
     }
     private void AddContacts()
     {
-        var contact = new Contact
+        for (int i = 0; i < 30; i++)
         {
-            Id = Guid.NewGuid(),
-            FirstName = "Test",
-            LastName = "Testng",
-            CreatedBy = "asd",
-            LastModifiedBy = "asd",
-            CreatedOn = DateTime.UtcNow,
-            LastModifiedOn = DateTime.UtcNow,
-            FullName = "Test",
-            Patronymic = "Test",
-        };
+            var contact = new Contact
+            {
+                Id = Guid.NewGuid(),
+                FirstName = $"Test{i}",
+                LastName = $"Testng{i}",
+                CreatedBy = "asd",
+                LastModifiedBy = "asd",
+                CreatedOn = DateTime.UtcNow,
+                LastModifiedOn = DateTime.UtcNow,
+                FullName = "Test",
+                Patronymic = "Test",
+            };
 
-        _db.Contacts.Add(contact);
+
+            _db.Contacts.Add(contact);
+        }
     }
     private void AddBasicUser()
     {

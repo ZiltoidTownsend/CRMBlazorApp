@@ -8,15 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace Server.Controllers.Entity
 {
     [ApiController]
-    [Route("[controller]")]
     public class ContactsController : BaseApiController<Contact>
     {
         private IMediator _mediator;
-        public ContactsController(IMediator mediator) : base(mediator)
+        public ContactsController(IMediator mediator, GetAllContactsQuery getAllQuery) : base(mediator, getAllQuery)
         {
+            
         }
-
-        protected override BaseGetAllQuery<Contact> GetAllQuery => new GetAllContactsQuery();
-
     }
 }

@@ -2,6 +2,7 @@
 @using Services
 @using System.Collections.ObjectModel
 @using Domain.Entities
+@using Client.Pages.Entities.Reestrs
 
 @inject IJSRuntime _js;
 
@@ -22,7 +23,6 @@
     </RowTemplate>
 </MudTable>*@
 @*<MudButton OnClick="@AddItem" Color="@Color.Success" Class="add-item-btn">Add Item</MudButton>*@
-<Client.Pages.Entities.Reestrs.BaseReestr TEntity="Contact"/>
 @* <MudDataGrid Items="@_items">
     <Columns>
         <PropertyColumn Property="x => x.Column1" />
@@ -32,6 +32,20 @@
         <PropertyColumn Property="x => x.Column5" />
     </Columns>
 </MudDataGrid> *@
+
+<MudTimeline TimelineOrientation=TimelineOrientation.Vertical TimelinePosition=TimelinePosition.Start>
+    <MudTimelineItem Color="Color.Primary" Variant="Variant.Filled">
+        <ItemContent>
+            <MudAlert Severity="Severity.Normal">Создать реестр сущностей</MudAlert>
+        </ItemContent>
+    </MudTimelineItem>
+    <MudTimelineItem Color="Color.Primary" Variant="Variant.Filled">
+        <ItemContent>
+            <MudAlert Severity="Severity.Normal">Создать страницы редактирования, удаления и создания сущностей</MudAlert>
+        </ItemContent>
+    </MudTimelineItem>
+</MudTimeline>
+
 
 @code {
     public class TestItem

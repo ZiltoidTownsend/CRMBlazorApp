@@ -25,9 +25,11 @@ public class UnitOfWork<TId> : IUnitOfWork<TId>
 
         if (!_repositories.ContainsKey(type))
         {
-            var repositoryType = typeof(RepositoryAsync<,>);
+            var repositoryBaseType = typeof(RepositoryAsync<,>);
 
-            var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity), typeof(TId)), _dbContext);
+            var repositoryType = repositoryBaseType.Assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(RepositoryAsync<TEntity,TId>))).First();
+
+            var repositoryInstance = Activator.CreateInstance(repositoryType, _dbContext);
 
             _repositories.Add(type, repositoryInstance);
         }

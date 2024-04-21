@@ -25,7 +25,7 @@
     <MudDropContainer T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Position == dropzone)" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
         <ChildContent>
             <div class="d-flex flex-grow-1 mud-grid">
-                @for (int i = 0; i < _columnCount; i++)
+                @for (int i = 0; i < _items.Count; i++)
                 {
                     int index = i;
                     <MudDropZone T="DropItem" 
@@ -54,6 +54,10 @@
 @code {
     private void ItemUpdated(MudItemDropInfo<DropItem> dropItem)
     {
+        var oldPos = dropItem.Item.Position;
+
+        _items.FirstOrDefault(i => i.Position == dropItem.DropzoneIdentifier).Position = oldPos;
+
         dropItem.Item.Position = dropItem.DropzoneIdentifier;
     }
 

@@ -3,6 +3,7 @@ using Client.Pages.Settings;
 using Client.ViewModels.Tables;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using static MudBlazor.CategoryTypes;
 
 namespace Client.Components;
 
@@ -13,11 +14,13 @@ public partial class CRMTable
     public string? TableKey { get; set; }
     [Parameter]
     [EditorRequired]
-    public TableViewModel TableViewModel { get; set; }
+    public TableViewModel? TableViewModel { get; set; }
     [Inject]
-    private PageHistoryNavigationManager _navigationManager { get; set; }
+    private PageHistoryNavigationManager? _navigationManager { get; set; }
     [Inject]
-    private ProfileManager _profileManager { get; set; }
+    private ProfileManager? _profileManager { get; set; }
+    private int selectedRowNumber = -1;
+    private MudTable<TableRowViewModel> mudTable;
     /*    [Inject]
         private IDialogService? Dialog { get; set; }*/
     protected override void OnInitialized()
@@ -33,5 +36,26 @@ public partial class CRMTable
         var options = new DialogOptions() { CloseButton = true, FullScreen = true };
 
         Dialog.Show<TableSettingsDialog>("Настройки таблицы", parameters, options);*/
+    }
+    private void RowClickEvent(TableRowClickEventArgs<TableRowViewModel> tableRowClickEventArgs)
+    {
+        
+    }
+    private string SelectedRowClassFunc(TableRowViewModel element, int rowNumber)
+    {
+        if (selectedRowNumber == rowNumber)
+        {
+            selectedRowNumber = -1;
+            return string.Empty;
+        }
+        else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
+        {
+            selectedRowNumber = rowNumber;
+            return "selected";
+        }
+        else
+        {
+            return string.Empty;
+        }
     }
 }

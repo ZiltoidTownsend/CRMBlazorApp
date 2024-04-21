@@ -1,29 +1,55 @@
 ﻿@using ViewModels.Tables
 
-<MudPaper Elevation="25">
+
+@*<MudPaper Elevation="25">
     <MudToolBar>
         <MudSpacer />
         <MudIconButton Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit" OnClick="RedirectToSettingPage"/>
     </MudToolBar>
-</MudPaper>
+</MudPaper>*@
 
-<MudTable T="TableRowViewModel" Items="@TableViewModel.Rows" RowClass="d-flex" CustomHeader="true">
-    <HeaderContent>
-        <MudTHeadRow Class="d-flex">
-            @foreach (var header in TableViewModel.Headers)
-            {
-                <MudTh Class=@($"mud-grid-item-xs-{header.Position}")>@header.DisplayValue</MudTh>
-            }
-        </MudTHeadRow>
+@*Перенести стили в отдельный файл*@
+<style> 
+    .selected {
+        background-color: var(--mud-palette-primary) !important;
+    }
 
-    </HeaderContent>
-    <RowTemplate>
-        @foreach(var row in context.RowItems)
-        {
-            <MudTh Class="mud-grid-item-xs-1">@row.Value</MudTh>
+        .selected > td {
+            color: white !important;
         }
-    </RowTemplate>
-</MudTable>
+
+            .selected > td .mud-input {
+                color: white !important;
+            }
+
+</style>
+
+@if (TableViewModel != null)
+{
+    <MudTable T="TableRowViewModel" Items="@TableViewModel.Rows" RowClass="d-flex cursor-pointer" @ref="mudTable"
+              Hover="true" RowClassFunc="@SelectedRowClassFunc" CustomHeader="true" OnRowClick="RowClickEvent">
+        <HeaderContent>
+            <MudTHeadRow Class="d-flex">
+                @foreach (var header in TableViewModel.Headers)
+                {
+                    <MudTh Class=@($"mud-grid-item-xs-{header.Weight}")>@header.DisplayValue</MudTh>
+                }
+            </MudTHeadRow>
+
+        </HeaderContent>
+        <RowTemplate>
+            @{
+                int headerIndex = 0;
+            }
+            @foreach (var row in context.RowItems)
+            {
+                int weight = TableViewModel.Headers[headerIndex].Weight;
+
+                <MudTh Class=@($"mud-grid-item-xs-{weight}")>@row.Value</MudTh>
+            }
+        </RowTemplate>
+    </MudTable>
+}
 
 @*<MudSimpleTable Bordered="true" Class="overflow-hidden p-4">
     <thead>

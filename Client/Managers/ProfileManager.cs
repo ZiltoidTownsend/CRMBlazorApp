@@ -9,14 +9,14 @@ public class ProfileManager
             Value = "FirstName",
             DisplayValue = "Имя",
             Position = "0",
-            Weight = 1,
+            Weight = 6,
         },
         new TableHeaderItemData
         {
             Value = "LastName",
             DisplayValue = "Фамилия",
             Position = "1",
-            Weight = 2,
+            Weight = 6,
         },
     };
 

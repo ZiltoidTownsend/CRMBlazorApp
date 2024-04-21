@@ -7,8 +7,8 @@ public class ContactManager : BaseManager<Contact>
     public ContactManager(HttpClient httpClient) : base(httpClient)
     {
     }
-    public override Task<List<Contact>> GetAllEntitiesAsync()
-    {
+    public override Task<List<Contact>> GetAllEntitiesAsync(int skipCount, int getCount, string sortingString)  => base.GetAllEntitiesAsync(skipCount, getCount, "");
+    /*{
         List<Contact> contacts = new List<Contact>
         {
             new Contact
@@ -24,7 +24,6 @@ public class ContactManager : BaseManager<Contact>
         };
 
         return Task.FromResult(contacts);
-    }
-        /*=> base.GetAllEntitiesAsync();*/
-    protected override string EntityPath => "contacts";
+    }*/
+    protected override string EntityPath => "Contacts";
 }

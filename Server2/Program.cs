@@ -26,9 +26,14 @@ builder.Services.AddRazorPages();
 
 
 builder.Services.AddScoped<IRequestHandler<GetAllContactsQuery, IEnumerable<Contact>>, GetAllContactsQueryHandler>();
+builder.Services.AddScoped<GetAllContactsQuery>();
+
+
 
 builder.Services.AddTransient(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
-builder.Services.AddTransient(typeof(IRepositoryAsync<,>), typeof(RepositoryAsync<,>)); // to do extentions
+builder.Services.AddTransient(typeof(IRepositoryAsync<Contact, Guid>), typeof(ContactsRepository)); // to do extentions
+
+//builder.Services.AddScoped<IRepositoryAsync<Contact, Guid>, RepositoryAsync<Contact, Guid>>();
 
 //builder.Services.AddComandsAndQueries(); to do
 
